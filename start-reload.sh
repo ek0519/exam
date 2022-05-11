@@ -14,4 +14,4 @@ PORT=${PORT:-8001}
 LOG_LEVEL=${LOG_LEVEL:-info}
 
 
-exec uvicorn --reload --debug --host $HOST --port $PORT --use-colors --log-level debug "$APP_MODULE"
+exec uvicorn --reload --debug --host $HOST --port $PORT --use-colors --log-level debug "$APP_MODULE" --proxy-headers --forwarded-allow-ips='*'
