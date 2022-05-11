@@ -1,0 +1,5 @@
+FROM nginx/unit:1.23.0-node15
+
+COPY .docker/nginx/config.json /docker-entrypoint.d/config.json
+
+EXPOSE 80
