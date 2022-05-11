@@ -1,31 +1,43 @@
-from pathlib import Path
-
-from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
+from mailjet_rest import Client
 
 from app.schema import EmailSchema
 from config import settings
 
-conf = ConnectionConfig(
-    MAIL_USERNAME=settings.MAIL_USERNAME,
-    MAIL_PASSWORD=settings.MAIL_PASSWORD,
-    MAIL_FROM=settings.MAIL_FROM,
-    MAIL_PORT=settings.MAIL_PORT,
-    MAIL_SERVER=settings.MAIL_SERVER,
-    MAIL_TLS=True,
-    MAIL_SSL=False,
-    USE_CREDENTIALS=True,
-    VALIDATE_CERTS=True,
-    TEMPLATE_FOLDER=Path(__file__).parent / "templates"
-)
-
 
 async def simple_send(subject: str, email: EmailSchema, token: str):
-    message = MessageSchema(
-        subject=subject,
-        recipients=email,
-        template_body={"token": token, "url": settings.APP_URL}
-    )
+    html = f'<body><p> Please click following link to verify email </p><a target="_blank" href="{settings.APP_URL}/api/auth/verify/{token}">link</a></body>'
 
-    fm = FastMail(conf)
-    await fm.send_message(message, template_name="verify.html")
-    return True
+    api_key = settings.MAIL_API_KEY
+    api_secret = settings.MAIL_API_SECRET
+    mailjet = Client(auth=(api_key, api_secret), version='v3.1')
+    data = {
+        'Messages': [
+            {
+                "From": {
+                    "Email": "ek0519@gmail.com",
+                    "Name": "Ekman"
+                },
+                "To": [
+                    {
+                        "Email": email,
+                        "Name": 'New Member'
+                    }
+                ],
+                "Subject": subject,
+                "TextPart": "My first Mailjet email",
+                "HTMLPart": html,
+                "CustomID": "AppGettingStartedTest"
+            }
+        ]
+    }
+    result = mailjet.send.create(data=data)
+    return result
+    # message = MessageSchema(
+    #     subject=subject,
+    #     recipients=email,
+    #     template_body={"token": token, "url": settings.APP_URL}
+    # )
+    #
+    # fm = FastMail(conf)
+    # await fm.send_message(message, template_name="verify.html")
+    # return True

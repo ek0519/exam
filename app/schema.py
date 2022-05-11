@@ -64,7 +64,7 @@ class UserOut(User):
 
 
 class EmailSchema(BaseModel):
-    email: List[EmailStr]
+    email: EmailStr
 
 
 class UserList(User):

@@ -39,7 +39,7 @@ async def verify_email(request: Request,
         raise HTTPException(status_code=400, detail='User already verified')
     title = 'Please verify your email'
     background_tasks.add_task(simple_send,
-                              title, [user.email], user.verify_token)
+                              title, user.email, user.verify_token)
     return {'message': 'Verification email sent'}
 
 
@@ -59,7 +59,7 @@ async def sign_up(request: Request,
     except Exception as e:
         raise HTTPException(status_code=400, detail='User already exists')
     title = 'Please verify your email'
-    background_tasks.add_task(simple_send, title, [new_user.email], token)
+    background_tasks.add_task(simple_send, title, new_user.email, token)
     return new_user
 
 

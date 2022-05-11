@@ -8,11 +8,9 @@ class Settings(BaseSettings):
     DB_NAME: str
     DB_USERNAME: str
     DB_PASSWORD: str
-    MAIL_USERNAME: str
-    MAIL_PASSWORD: str
+    MAIL_API_KEY: str
+    MAIL_API_SECRET: str
     MAIL_FROM: str
-    MAIL_PORT: int
-    MAIL_SERVER: str
     APP_URL: str
 
     class Config:
